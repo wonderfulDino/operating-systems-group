@@ -23,8 +23,8 @@ void * parallel_mergesort(void *arg){
     int right = args->right;
     //int level = args->level;
 
+	/* Selection sort -- NEEDS TO BE MERGE SORT*/
     int n = right+1;
-
 	int i, j, minIndex, temp;
 
     for (i = 0; i < n - 1; i++) {
@@ -40,8 +40,6 @@ void * parallel_mergesort(void *arg){
         A[i] = A[minIndex];
         A[minIndex] = temp;
     }
-
-    free(args);
 
     return NULL;
 }
