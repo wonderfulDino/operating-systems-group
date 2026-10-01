@@ -15,15 +15,6 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
 void my_mergesort(int left, int right){
 }
 
-void print_array(int n)
-{
-	int i;
-    for (i = 0; i < n+1; i++) {
-        printf("%d ", A[i]);
-    }
-    printf("\n\n");
-}
-
 /* this function will be called by the testing program. */
 void * parallel_mergesort(void *arg){
     struct argument *args = (struct argument *)arg;
@@ -33,8 +24,6 @@ void * parallel_mergesort(void *arg){
     //int level = args->level;
 
     int n = right+1;
-
-	if (n < 100) print_array(n);
 
 	int i, j, minIndex, temp;
 
@@ -51,8 +40,6 @@ void * parallel_mergesort(void *arg){
         A[i] = A[minIndex];
         A[minIndex] = temp;
     }
-	
-	if (n < 100) print_array(n);
 
     free(args);
 
@@ -60,7 +47,7 @@ void * parallel_mergesort(void *arg){
 }
 
 /* we build the argument for the parallel_mergesort function. */
-struct argument *buildArgs(int left, int right, int level) {
+struct argument *buildArgs(int left, int right, int level){
     struct argument *args = malloc(sizeof(struct argument));
 
     args->left = left;
