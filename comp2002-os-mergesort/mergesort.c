@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h> /* for memcpy */
 #include <stdlib.h> /* for malloc */
+#include <pthread.h>
 #include "mergesort.h"
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
@@ -80,18 +81,24 @@ void * parallel_mergesort(void *arg){
     int left = args->left;
     int right = args->right;
     int level = args->level;
+    pthread_t thread1, thread2;
 
     if (level < cutoff && left < right) {
         int middle = (left + right) / 2;
 
-        // left half
+        // left half, create a new thread to sort it
         struct argument *arg1=buildArgs(left,  middle, level+1);
-        parallel_mergesort(arg1);
+        pthread_create(&thread1, NULL, parallel_mergesort, arg1);
 
-        // right half
+        // right half, create a new thread to sort it
         struct argument *arg2=buildArgs(middle+1,  right, level+1);
-        parallel_mergesort(arg2);
+        pthread_create(&thread2, NULL, parallel_mergesort, arg2);
 
+        // wait for both threads to finish
+        pthread_join(thread1, NULL);
+        pthread_join(thread2, NULL);
+
+        // merge the two halves
         merge(left, middle,middle+1,right);
     } else {
         my_mergesort(left, right);
