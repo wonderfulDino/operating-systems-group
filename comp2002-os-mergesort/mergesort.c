@@ -12,7 +12,7 @@
 void merge(int leftstart, int leftend, int rightstart, int rightend){
     int i = leftstart;
     int j = rightstart;
-    int k = 0;
+    int k = leftstart;
 
     int size = rightend - leftstart + 1;
 
@@ -43,8 +43,8 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
     }
 
     // Copy B array back into A
-    for (i = 0; i < size; i++) {
-        A[leftstart + i] = B[i];
+    for (i = leftstart; i <= rightend; i++) {
+        A[i] = B[i];
     }
 }
 
@@ -98,6 +98,10 @@ void * parallel_mergesort(void *arg){
         pthread_join(thread1, NULL);
         pthread_join(thread2, NULL);
 
+        // free the arguments
+        free(arg1);
+        free(arg2);
+
         // merge the two halves
         merge(left, middle,middle+1,right);
     } else {
@@ -113,6 +117,12 @@ void * parallel_mergesort(void *arg){
 struct argument *buildArgs(int left, int right, int level){
     struct argument *args = malloc(sizeof(struct argument));
 
+    // check if malloc failed
+    if (args == NULL) {
+        fprintf(stderr, "Error: malloc failed in buildArgs\n");
+        exit(EXIT_FAILURE);
+    }
+    
     args->left = left;
     args->right = right;
     args->level = level;
