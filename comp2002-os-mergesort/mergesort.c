@@ -14,6 +14,7 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
     int j = rightstart;
     int k = leftstart;
 
+
     // Merge the two sorted halves
     while (i <= leftend && j <= rightend) {
         if (A[i] <= A[j]) {
@@ -105,8 +106,14 @@ void * parallel_mergesort(void *arg){
         }
 
         // wait for both threads to finish
-        pthread_join(thread1, NULL);
-        pthread_join(thread2, NULL);
+        int join1 = pthread_join(thread1, NULL);
+        int join2 = pthread_join(thread2, NULL);
+
+        // check if pthread_join failed
+        if(join1 != 0 || join2 != 0) {
+            fprintf(stderr, "Error: pthread_join failed for left half\n");
+            exit(EXIT_FAILURE);
+        }
 
         // free the arguments
         free(arg1);
