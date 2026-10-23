@@ -14,8 +14,6 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
     int j = rightstart;
     int k = leftstart;
 
-    int size = rightend - leftstart + 1;
-
     // Merge the two sorted halves
     while (i <= leftend && j <= rightend) {
         if (A[i] <= A[j]) {
@@ -88,11 +86,23 @@ void * parallel_mergesort(void *arg){
 
         // left half, create a new thread to sort it
         struct argument *arg1=buildArgs(left,  middle, level+1);
-        pthread_create(&thread1, NULL, parallel_mergesort, arg1);
+        int result1 = pthread_create(&thread1, NULL, parallel_mergesort, arg1);
+
+        // check if pthread_create failed
+        if(result1 != 0) {
+            fprintf(stderr, "Error: pthread_create failed for left half\n");
+            exit(EXIT_FAILURE);
+        }
 
         // right half, create a new thread to sort it
         struct argument *arg2=buildArgs(middle+1,  right, level+1);
-        pthread_create(&thread2, NULL, parallel_mergesort, arg2);
+        int result2 = pthread_create(&thread2, NULL, parallel_mergesort, arg2);
+
+        // check if pthread_create failed
+        if(result2 != 0) {
+            fprintf(stderr, "Error: pthread_create failed for right half\n");
+            exit(EXIT_FAILURE);
+        }
 
         // wait for both threads to finish
         pthread_join(thread1, NULL);
@@ -122,7 +132,7 @@ struct argument *buildArgs(int left, int right, int level){
         fprintf(stderr, "Error: malloc failed in buildArgs\n");
         exit(EXIT_FAILURE);
     }
-    
+
     args->left = left;
     args->right = right;
     args->level = level;
