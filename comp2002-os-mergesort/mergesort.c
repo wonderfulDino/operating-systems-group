@@ -42,9 +42,7 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
     }
 
     // Copy B array back into A
-    for (i = leftstart; i <= rightend; i++) {
-        A[i] = B[i];
-    }
+    memcpy(A + leftstart, B + leftstart, (rightend - leftstart + 1) * sizeof(int));
 }
 
 
@@ -56,18 +54,13 @@ void merge(int leftstart, int leftend, int rightstart, int rightend){
 void my_mergesort(int left, int right){
     if (left >= right) { return; }
 
-    int middle = (left + right) / 2;
+    int middle = left + (right - left) / 2;
 
     my_mergesort(left, middle);
     my_mergesort(middle + 1, right);
 
     merge(left, middle, middle + 1, right);
 }
-
-
-
-
-
 
 
 
