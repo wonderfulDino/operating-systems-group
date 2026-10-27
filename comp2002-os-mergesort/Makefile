@@ -7,6 +7,10 @@ all: test-mergesort
 test-mergesort: test-mergesort.o mergesort.o
 	$(CC) $(CFLAGS) -o $@ $?
 
+# Build using unit-tests.c
+unit-tests: unit-tests.o mergesort.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
 .PHONY: clean
 clean:
 	/bin/rm -f *.o *.d test-mergesort
