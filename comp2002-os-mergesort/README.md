@@ -224,6 +224,7 @@ These issues do not contradict the passing correctness tests above; several conc
 - Implement `merge()` and `my_mergesort()`.
 - Test sequential merge sort.
 - Fix sorting errors and improve the sequential implementation.
+- Prepare the README.
 
 ### Member 2 – Parallel Merge Sort
 
@@ -231,6 +232,7 @@ These issues do not contradict the passing correctness tests above; several conc
 - Handle thread creation and joining.
 - Implement cutoff logic.
 - Manage thread arguments and memory.
+- Check the README.
 
 ### Member 3 – Testing and Performance
 
@@ -238,7 +240,7 @@ These issues do not contradict the passing correctness tests above; several conc
 - Test different array sizes, cutoff levels, and random seeds.
 - Compare sequential and parallel execution times.
 - Help optimise the implementation to achieve at least 2x speedup.
-- Prepare the README.
+- Check the README.
 
 ### All Members
 
