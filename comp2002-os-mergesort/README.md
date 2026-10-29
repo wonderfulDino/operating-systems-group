@@ -103,7 +103,7 @@ The sequential function recursively sorts the left and right halves before calli
 
 ## Testing
 
-### 1. Single-run correctness tests
+### 1. Single-run tests
 
 Use `test-mergesort` to validate the same input with different sizes and cutoff values. Setting `cutoff = 0` isolates the sequential implementation.
 
@@ -117,12 +117,11 @@ The following five sequential configurations were run successfully:
 | 1,000 | 0 | 42 | Passed |
 | 100,000 | 0 | 42 | Passed |
 
-The current source was also compiled and checked with `100000` elements, seed `42`, and cutoff values `1`, `2`, `3`, and `4`; each run passed the sorted-order check. These runs establish correctness for the listed configurations, not a performance advantage.
+The current source was also compiled and checked with `100,000` elements, seed `42`, and cutoff values `1`, `2`, `3`, and `4`; each run passed the sorted-order check. These runs establish correctness for the listed configurations, not a performance advantage.
 
 Example commands:
 
 ```bash
-./test-mergesort 2 0 42
 ./test-mergesort 100000 0 42
 ./test-mergesort 100000 1 42
 ./test-mergesort 100000 2 42
@@ -132,16 +131,16 @@ Example commands:
 
 ### 2. Automated size/cutoff test matrix
 
-To ensure our program is working properly, we have written an additional series of automatic tests in `unit-tests.c`. The seed used for all tests was `1`.
+To ensure our program is working properly, we have written additional automatic tests in `unit-tests.c`. The seed used for all tests is `1`.
 
 These tests can be run via `make unit-tests` or once complied `./unit-tests`.
 
 The tests can be broken into the following catergories:
-- Tests for buildArg()
-- Tests for my_mergesort()
-- Tests for parallel_mergesort()
+- Tests for `buildArg()`
+- Tests for `my_mergesort()`
+- Tests for `parallel_mergesort()`
 
-**Table 2.1:** Tests for buildArg()
+**Table 2.1:** Tests for `buildArg()`
 
 | Input | Quantity |
 | --- | --- |
@@ -149,7 +148,7 @@ The tests can be broken into the following catergories:
 | Zeroes | 1 |
 | Negative Random Values | 10 |
 
-**Table 2.2:** Tests for my_mergesort()
+**Table 2.2:** Tests for `my_mergesort()`
 
 | Input | Quantity |
 | --- | --- |
@@ -158,7 +157,7 @@ The tests can be broken into the following catergories:
 | Large arrays & Odds, Evens | 1000 to 9000, i+=1001 |
 | Very large arrays | 100,000 to 900,000, i+=100,000 |
 
-**Table 2.3:** Tests for parallel_mergesort()
+**Table 2.3:** Tests for `parallel_mergesort()`
 
 | Input | Quantity |
 | --- | --- |
@@ -189,31 +188,22 @@ speedup = mean_sequential_time / mean_parallel_time
 
 These are the **benchmark settings and calculations implemented in the source**, not verified final performance results. The full 100-million-element benchmark was **not** executed during this documentation review. Two arrays of this size require approximately **800 MB** for integer storage alone, and high cutoffs can create very many threads. Performance results should be recorded on the group's target Linux/WSL machine before claiming the 2× target has been achieved.
 
-Suggested report format for confirmed benchmark results:
+**Table 3.1:** Thread tests for `parallel_mergesort()` for `n = 100,000,000`. Note: Each thread level was ran 3 times and averaged. The exact time is unimportant, what's useful is what thread level is most efficient for sorting large arrays. 
+| Thread Level | Average Time (seconds) | Relative time (%) | Speedup |
+| :---: | :---: | :---: | :---: |
+| 0 | 27.36 | 100% | 1.00x |
+| 1 | 15.75 | 57.8% | 1.73x |
+| 2 | 12.03 | 44.1% | 2.27x |
+| 3 | 11.16 | 41.0% | 2.44x |
+| 4 | 12.26 | 45.0% | 2.22x |
+| 5 | 12.65 | 46.4% | 2.16x |
+| 6 | 11.59 | 42.0% | 2.38x |
+| 7 | 11.40 | 41.8% | 2.39x |
+| 8 | 11.28 | 41.4% | 2.42x |
+| 9 | 11.35 | 41.6% | 2.40x |
+| 10 | 13.09 | 48.0% | 2.08x |
 
-**Table 3.1:** Thread tests for parallel_mergesort() for `n = 100,000,000`. Note: Each thread level was ran 3 times and averaged. The exact time is unimportant, what's useful is what thread level is most efficient for sorting large arrays. 
-| Thread Levels | Average Time (seconds) | % compared to no threading |
-| :---: | :---: | :---: |
-| 0 | 27.36 | 100% |
-| 1 | 15.75 | 57.8% |
-| 2 | 12.03 | 44.1% |
-| 3 | 11.16 | 41.0% |
-| 4 | 12.26 | 45.0% |
-| 5 | 12.65 | 46.4% |
-| 6 | 11.59 | 42.% |
-| 7 | 11.40 | 41.8% |
-| 8 | 11.28 | 41.4% |
-| 9 | 11.35 | 41.6% |
-| 10 | 13.09 | 48.0% |
-
-| Cutoff | Mean time (s), 3 runs | Relative time (%) | Speedup |
-| ---: | ---: | ---: | ---: |
-| 0 | [measure] | 100 | 1.00× |
-| 1 | [measure] | [calculate] | [calculate] |
-| 2 | [measure] | [calculate] | [calculate] |
-| 3–10 | [measure or state not tested] | [calculate] | [calculate] |
-
-When measuring performance, run the same input size and seed across configurations and record the CPU, available cores, memory, and whether testing was performed under WSL or native Linux. Timing differences on very small arrays are not a reliable measure of parallel speedup because thread creation and scheduling overhead can dominate the work.
+These tests were run within an Ubuntu virtual machine on a Window 11 computer with a Intel Core i5-1035G1 CPU and NVIDIA GeForce MX330. Measuring performance is difficult as fluctuating background processes can signficantly affect the results.
 
 ## Known Bugs
 
