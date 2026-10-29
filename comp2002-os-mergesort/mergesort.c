@@ -6,7 +6,6 @@
 #include <string.h> /* for memcpy */
 #include <stdlib.h> /* for malloc */
 #include <pthread.h>
-#include <stdbool.h>
 #include "mergesort.h"
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
