@@ -17,6 +17,7 @@ int *A;
 /* when merge, we need a temp array (named B) to temporarily store elements of the original array */
 int *B;
 
+int success_is = true;
 int successes_n = 0;
 int tests_n = 0;
 int tests_all = 0;
@@ -167,15 +168,13 @@ double test(int _n, int _cutoff, int _seed) {
 	parallel_mergesort(arg);
 	sorting_time = getMilliSeconds() - start_time;
 
-	tests_n ++;
-	tests_all ++;
-
 	go_back_line();
 
+	bool cleared = check_if_sorted(A, n);
+	test_success(cleared);
+
 	// check the sorting results
-	if (check_if_sorted(A,n)) {
-		successes_n ++;
-		successes_all ++;
+	if (cleared) {
 		printf(GREY "Sorting " COLOUR "%d" GREY " elements took " COLOUR "%4.2lf" GREY " seconds."RESET"\n", n,  sorting_time/1000.0);
 	} else {
 		printf("sorting failed!!!!\n");
@@ -200,20 +199,25 @@ void test_buildArgs(int left, int right, int level) {
 
 	bool pass = true;
 	// Check if NULL
-	if (args == NULL) { printf(RED"ERROR: argument returned as NULL."RESET"\n"); pass = false; }
+	if (args == NULL) { 
+		pass = false;
+		if (success_is == true) {
+			printf(RED"ERROR: argument returned as NULL."RESET"\n");
+		}
+	}
 	// Check if values are assigned.
-	if (args->left != left || args->right != right || args->level != level) { printf(RED"ERROR: argument formed incorrectly."RESET"\n"); pass = false; }
+	else if (args->left != left || args->right != right || args->level != level) { printf(RED"ERROR: argument formed incorrectly."RESET"\n"); pass = false; }
 
-	if (pass) {
-		successes_n ++;
-		successes_all ++;
+	test_success(pass);
+	if (pass == success_is) {
 		printf(GREY"Test buildArgs(%d, %d, %d)"COLOUR" Passed."RESET"\n", left, right, level);
 	}
 
-	tests_n ++;
-	tests_all ++;
 
-	free(args);
+	if (args != NULL) {
+		free(args);
+	}
+
 }
 
 void test_mergesort(int n) {
@@ -225,12 +229,11 @@ void test_mergesort(int n) {
 	// generate random input
     my_mergesort(0, n-1);
 
-	tests_n ++;
-	tests_all ++;
 
-    if (check_if_sorted(A, n)) {
-		successes_n ++;
-		successes_all ++;
+	bool cleared = check_if_sorted(A, n);
+	test_success(cleared);
+
+    if (cleared) {
 		printf(GREY"Test my_mergesort(0, %d)"COLOUR" Passed."RESET"\n", n-1);
 	} else {
 		printf(RED"Test my_mergesort(0, %d) Failed."RESET"\n", n-1);
@@ -244,6 +247,22 @@ void section_start(const char *text) {
     printf("## %s ##\n", text);
     successes_n = 0;
     tests_n = 0;
+}
+
+void section_success_is(bool condition) {
+	success_is = condition;
+
+	if (!success_is) { printf(COLOUR"# ERRORs sigifies a successful test."RESET"\n"); }
+}
+
+void test_success(bool cleared) {
+	tests_n ++;
+	tests_all ++;
+
+	if (success_is == cleared) {
+		successes_n ++;
+		successes_all ++;
+	}
 }
 
 void section_end(void) {
@@ -264,7 +283,7 @@ int main(void) {
 	printf("## Unit Test buildArgs() ##\n\n");
 
 	section_start("buildArgs() RANDOM VALUES");
-	for(i = 0; i < 10; i++) {test_buildArgs(random()%RANGE,random()%RANGE,random()%RANGE);}
+	for(i = 0; i < 10; i++) { test_buildArgs(random()%RANGE,random()%RANGE,random()%RANGE); }
 	section_end();
 
 	section_start("buildArgs() ZEROES");
@@ -272,7 +291,12 @@ int main(void) {
 	section_end();
 
 	section_start("buildArgs() NEGATIVE VALUES");
-	for(i = 0; i < 10; i++) {test_buildArgs(-random()%RANGE,-random()%RANGE,-random()%RANGE);}
+	section_success_is(false);
+	test_buildArgs(-1,0,0);
+	test_buildArgs(0,-1,0);
+	test_buildArgs(0,0,-1);
+	test_buildArgs(-1,-1,-1);
+	section_success_is(true);
 	section_end();
 
 	// Tests for my_mergesort()
