@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <error.h>     /* On MacOS you won't need this line */
 #include "mergesort.h"
+#include <stdbool.h>
 
 /* the number of levels of threads, specified by the user */
 int cutoff = 0;
@@ -29,6 +30,7 @@ double getMilliSeconds(void);
 #define COLOUR "\x1b[34m"
 #define RESET "\x1b[0m"
 #define GREY "\x1b[38;5;244m"
+#define RED "\x1b[31m"
 
 /*
 ---------------------------------------------------------------------------
@@ -191,6 +193,53 @@ double test(int _n, int _cutoff, int _seed) {
 	return sorting_time/1000.0;
 }
 
+// Unit test for buildArgs()
+void test_buildArgs(int left, int right, int level) {
+
+	struct argument *args = buildArgs(left, right, level);
+
+	bool pass = true;
+	// Check if NULL
+	if (args == NULL) { printf(RED"ERROR: argument returned as NULL."RESET"\n"); pass = false; }
+	// Check if values are assigned.
+	if (args->left != left || args->right != right || args->level != level) { printf(RED"ERROR: argument formed incorrectly."RESET"\n"); pass = false; }
+
+	if (pass) {
+		successes_n ++;
+		successes_all ++;
+		printf(GREY"Test buildArgs(%d, %d, %d)"COLOUR" Passed."RESET"\n", left, right, level);
+	}
+
+	tests_n ++;
+	tests_all ++;
+
+	free(args);
+}
+
+void test_mergesort(int n) {
+
+	// setting up variables
+	A = (int *) malloc(sizeof(int) * n);
+	B = (int *) malloc(sizeof(int) * n);
+
+	// generate random input
+    my_mergesort(0, n-1);
+
+	tests_n ++;
+	tests_all ++;
+
+    if (check_if_sorted(A, n)) {
+		successes_n ++;
+		successes_all ++;
+		printf(GREY"Test my_mergesort(0, %d)"COLOUR" Passed."RESET"\n", n-1);
+	} else {
+		printf(RED"Test my_mergesort(0, %d) Failed."RESET"\n", n-1);
+	}
+
+	free(A);
+	free(B);
+}
+
 void section_start(const char *text) {
     printf("## %s ##\n", text);
     successes_n = 0;
@@ -198,12 +247,41 @@ void section_start(const char *text) {
 }
 
 void section_end(void) {
-    printf("%d / %d tests ran successfully. \n\n", successes_n, tests_n);
+	if (successes_n != tests_n) { 
+		printf(RED"%d / %d tests ran successfully."RESET" \n\n", successes_n, tests_n);
+	} else {
+    	printf(RESET"%d / %d tests ran successfully. \n\n", successes_n, tests_n);
+	}
 }
 
 int main(void) {
 
+	printf("\n");
+
 	int i;
+
+	// Tests for buildArgs()
+	printf("## Unit Test buildArgs() ##\n\n");
+
+	section_start("buildArgs() RANDOM VALUES");
+	for(i = 0; i < 10; i++) {test_buildArgs(random()%RANGE,random()%RANGE,random()%RANGE);}
+	section_end();
+
+	section_start("buildArgs() ZEROES");
+	test_buildArgs(0,0,0);
+	section_end();
+
+	section_start("buildArgs() NEGATIVE VALUES");
+	for(i = 0; i < 10; i++) {test_buildArgs(-random()%RANGE,-random()%RANGE,-random()%RANGE);}
+	section_end();
+
+	// Tests for my_mergesort()
+	section_start("Unit Test my_mergesort()");
+	for(i = 0; i < 10; i++) { test_mergesort(i); }
+	for(i = 100; i < 1000; i+=100) { test_mergesort(i); }
+	for(i = 1000; i < 10000; i+=1001) { test_mergesort(i); }
+	for(i = 100000; i < 1000000; i+=100000) { test_mergesort(i); }
+	section_end();
 
 	int cutoff_i;
 
