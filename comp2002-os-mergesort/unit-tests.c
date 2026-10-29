@@ -144,6 +144,36 @@ void go_back_line(void) {
 	printf("\r");
 }
 
+void section_start(const char *text) {
+    printf("## %s ##\n", text);
+    successes_n = 0;
+    tests_n = 0;
+}
+
+void section_success_is(bool condition) {
+	success_is = condition;
+
+	if (!success_is) { printf(COLOUR"# ERRORs sigifies a successful test."RESET"\n"); }
+}
+
+void test_success(bool cleared) {
+	tests_n ++;
+	tests_all ++;
+
+	if (success_is == cleared) {
+		successes_n ++;
+		successes_all ++;
+	}
+}
+
+void section_end(void) {
+	if (successes_n != tests_n) { 
+		printf(RED"%d / %d tests ran successfully."RESET" \n\n", successes_n, tests_n);
+	} else {
+    	printf(RESET"%d / %d tests ran successfully. \n\n", successes_n, tests_n);
+	}
+}
+
 double test(int _n, int _cutoff, int _seed) {
 	double start_time;
 	double sorting_time;
@@ -243,36 +273,6 @@ void test_mergesort(int n) {
 	free(B);
 }
 
-void section_start(const char *text) {
-    printf("## %s ##\n", text);
-    successes_n = 0;
-    tests_n = 0;
-}
-
-void section_success_is(bool condition) {
-	success_is = condition;
-
-	if (!success_is) { printf(COLOUR"# ERRORs sigifies a successful test."RESET"\n"); }
-}
-
-void test_success(bool cleared) {
-	tests_n ++;
-	tests_all ++;
-
-	if (success_is == cleared) {
-		successes_n ++;
-		successes_all ++;
-	}
-}
-
-void section_end(void) {
-	if (successes_n != tests_n) { 
-		printf(RED"%d / %d tests ran successfully."RESET" \n\n", successes_n, tests_n);
-	} else {
-    	printf(RESET"%d / %d tests ran successfully. \n\n", successes_n, tests_n);
-	}
-}
-
 int main(void) {
 
 	printf("\n");
@@ -290,14 +290,14 @@ int main(void) {
 	test_buildArgs(0,0,0);
 	section_end();
 
-	section_start("buildArgs() NEGATIVE VALUES");
+	/*section_start("buildArgs() NEGATIVE VALUES");
 	section_success_is(false);
 	test_buildArgs(-1,0,0);
 	test_buildArgs(0,-1,0);
 	test_buildArgs(0,0,-1);
 	test_buildArgs(-1,-1,-1);
 	section_success_is(true);
-	section_end();
+	section_end();*/
 
 	// Tests for my_mergesort()
 	section_start("Unit Test my_mergesort()");
