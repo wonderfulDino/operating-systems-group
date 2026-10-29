@@ -32,12 +32,14 @@ This project implements merge sort in C using both sequential recursion and POSI
 
 ## Manifest
 
-- `Makefile` — Builds `test-mergesort` by default, supports `make unit-tests`, and provides a `clean` target.
-- `mergesort.c` — Implements `merge()`, sequential `my_mergesort()`, parallel `parallel_mergesort()`, and `buildArgs()`.
-- `mergesort.h` — Declares the sorting functions, thread argument structure, cutoff, and shared arrays `A` and `B`.
-- `test-mergesort.c` — Generates a seeded random input, runs one sorting test, measures elapsed time, and checks whether the output is sorted.
-- `unit-tests.c` — Runs automated tests over multiple input sizes and cutoff levels, followed by a repeated timing comparison. Runs some unit tests.
-- `README` — Describes the project, build and usage instructions, testing, limitations, and reflections.
+| File | Description |
+| --- | --- |
+| `Makefile` | Builds `test-mergesort` by default, supports `make unit-tests`, and provides a `clean` target. |
+| `mergesort.c` | Implements `merge()`, sequential `my_mergesort()`, parallel `parallel_mergesort()`, and `buildArgs()`. |
+| `mergesort.h` | Declares the sorting functions, thread argument structure, cutoff, and shared arrays `A` and `B`. |
+| `test-mergesort.c` | Generates a seeded random input, runs one sorting test, measures elapsed time, and checks whether the output is sorted. |
+| `unit-tests.c` | Runs automated tests over multiple input sizes and cutoff levels, followed by a repeated timing comparison. Runs some unit tests. |
+| `README` | Describes the project, build and usage instructions, testing, limitations, and reflections. |
 
 Generated executables, `.o` object files, and `.d` dependency files are build outputs rather than source files.
 
@@ -197,6 +199,7 @@ Tables 2.1, 2.2 and 2.3 show the test cases used for each function.
 | Very large arrays | 100,000 to 1,000,000, i+=100,000 |
 
 All checks passed.
+
 ```291 / 291 tests ran successfully.```
 
 The test programs used the provided `check_if_sorted()`, which compares adjacent values and rejects any decrease. This verifies nondecreasing order but does **not**, on its own, prove that the output contains exactly the same multiset of elements as the input. The current automated matrix also uses a fixed seed rather than varying several seeds.
@@ -247,35 +250,33 @@ These issues do not contradict the passing correctness tests above; several conc
 
 ## Reflection and Self Assessment
 
-### Member 1 — Sequential Merge Sort (Ziming)
+### Member 1: Sequential Merge Sort (Ziming)
 
-**Challenge 1 — Managing indices during merging.** The merge function has to move through two ordered ranges without skipping or overwriting values. Keeping the roles of `i`, `j`, and `k` separate, then copying any remaining elements and writing the merged range back to `A`, is central to correctness. **What I learned:** merge sort depends on precise subarray boundaries, and the auxiliary array `B` allows values to be combined without losing elements that are still needed.
+**Challenge 1: Managing indices during merging.** The merge function has to move through two ordered ranges without skipping or overwriting values. Keeping the roles of `i`, `j`, and `k` separate, then copying any remaining elements and writing the merged range back to `A`, is central to correctness. **What I learned:** merge sort depends on precise subarray boundaries, and the auxiliary array `B` allows values to be combined without losing elements that are still needed.
 
-**Challenge 2 — Understanding the recursive base case.** A recursive call must stop when `left >= right`; otherwise, splitting could continue indefinitely. The two recursive calls must finish before their parent merges the results. **What I learned:** a divide-and-conquer algorithm needs both a correct stopping condition and a clear guarantee that each subproblem is solved before the combined result is produced.
+**Challenge 2: Understanding the recursive base case.** A recursive call must stop when `left >= right`; otherwise, splitting could continue indefinitely. The two recursive calls must finish before their parent merges the results. **What I learned:** a divide-and-conquer algorithm needs both a correct stopping condition and a clear guarantee that each subproblem is solved before the combined result is produced.
 
-**Challenge 3 — Reviewing edge cases and arithmetic safety.** Testing only a large random array would miss some boundary behaviours, so the sequential version was also checked with very small and odd-sized inputs. Code review also highlighted the potential overflow risk in the midpoint expression. **What I learned:** passing normal tests is not the same as covering edge cases, and small arithmetic details can matter even when the overall algorithm is correct.
+**Challenge 3: Reviewing edge cases and arithmetic safety.** Testing only a large random array would miss some boundary behaviours, so the sequential version was also checked with very small and odd-sized inputs. Code review also highlighted the potential overflow risk in the midpoint expression. **What I learned:** passing normal tests is not the same as covering edge cases, and small arithmetic details can matter even when the overall algorithm is correct.
 
-### Member 2 — Parallel Merge Sort (Hang Yu)
+### Member 2: Parallel Merge Sort (Hang Yu)
 
-**Challenge 1 — Synchronising child threads.** Each recursive split launches threads for the left and right portions. If the parent were to merge before both children finished, it could read data while a child was still writing to it. The implementation therefore joins both threads before merging. **What I learned:** `pthread_join()` provides an ordering point, while keeping threads within separate index ranges helps avoid data races on the shared arrays.
+**Challenge 1: Synchronising child threads.** Each recursive split launches threads for the left and right portions. If the parent were to merge before both children finished, it could read data while a child was still writing to it. The implementation therefore joins both threads before merging. **What I learned:** `pthread_join()` provides an ordering point, while keeping threads within separate index ranges helps avoid data races on the shared arrays.
 
-**Challenge 2 — Keeping thread arguments valid.** The thread function requires a pointer argument, so each child receives a separately allocated `struct argument` containing its array bounds and recursion level. The parent frees those argument objects after joining. **What I learned:** memory ownership and object lifetime are important in concurrent code; a thread must not be given a pointer to data that might disappear while it is still running.
+**Challenge 2: Keeping thread arguments valid.** The thread function requires a pointer argument, so each child receives a separately allocated `struct argument` containing its array bounds and recursion level. The parent frees those argument objects after joining. **What I learned:** memory ownership and object lifetime are important in concurrent code; a thread must not be given a pointer to data that might disappear while it is still running.
 
-**Challenge 3 — Selecting a practical cutoff.** Creating more threads does not always make sorting faster. The code stops spawning threads once it reaches the cutoff and uses sequential recursion thereafter. **What I learned:** parallelism has a cost, so thread creation and scheduling overhead must be balanced against the amount of useful work available in each subarray.
+**Challenge 3: Selecting a practical cutoff.** Creating more threads does not always make sorting faster. The code stops spawning threads once it reaches the cutoff and uses sequential recursion thereafter. **What I learned:** parallelism has a cost, so thread creation and scheduling overhead must be balanced against the amount of useful work available in each subarray.
 
-**Challenge 4 – Understanding recursive thread creation.** At first, I found it difficult to understand how parallel_mergesort() could keep creating new threads by calling itself. **What I learned:** I learned that each new thread increases the recursion level, and thread creation stops when the level reaches the cutoff. This helped me understand how recursion and multithreading work together.
+**Challenge 4: Understanding recursive thread creation.** At first, I found it difficult to understand how parallel_mergesort() could keep creating new threads by calling itself. **What I learned:** I learned that each new thread increases the recursion level, and thread creation stops when the level reaches the cutoff. This helped me understand how recursion and multithreading work together.
 
-### Member 3 — Testing and Performance (Stuart Vass)
+### Member 3: Testing and Performance (Stuart Vass)
 
-# Challenges
+**Challenge 1: Test-retest Reliability.** The time it takes to sort 100,000,000 can vary wildly due to background processes. This makes it difficult to compare any two runs together. **Solution:** using a percentage to the base case (no threading) as opposed to using the time in seconds. This percentage stays more consistent when retesting. 
 
-**Challenge 1: Test-retest Reliability:** The time it takes to sort 100,000,000 can vary wildly due to background processes. This makes it difficult to compare any two runs together. **Solution:** using a percentage to the base case (no threading) as opposed to using the time in seconds. This percentage stays more consistent when retesting. 
+**Challenge 2: Intra-rater Reliability.** With 100,000,000 elements, each sort takes ~20-60 seconds, this is enough time for background processes to start and finish. **Solution:** Each thread level is ran three times, and is averaged for more consistent results. 
 
-**Challenge 2: Intra-rater Reliability:** With 100,000,000 elements, each sort takes ~20-60 seconds, this is enough time for background processes to start and finish. **Solution:** Each thread level is ran three times, and is averaged for more consistent results. 
+**Challenge 3: No Failing Test Cases.** By the time `unit-tests.c` was implemented, `mergesort.c` was complete and all the test and unit tests were passing. It then became unclear whether `mergesort.c` was correct, or if `unit-tests.c` wasn't comphrensive enough. Solution: Add more tests and compare results against Gradescope results (Inter-Rater Reliability). 
 
-**Challenge 3: No Failing Test Cases:** By the time `unit-tests.c` was implemented, `mergesort.c` was complete and all the test and unit tests were passing. It then became unclear whether `mergesort.c` was correct, or if `unit-tests.c` wasn't comphrensive enough. Solution: Add more tests and compare results against Gradescope results (Inter-Rater Reliability). 
-
-**Challenge 4: Random Seeds**: The function header provided allows for the random seed to be set. Initially it was thought to randomise the seed for the test cases, however this would reduce both the test-retest reliability and intra-rater reliability of `unit-tests.c`. Solution: use the seed `1` for all tests. 
+**Challenge 4: Random Seeds.** The function header provided allows for the random seed to be set. Initially it was thought to randomise the seed for the test cases, however this would reduce both the test-retest reliability and intra-rater reliability of `unit-tests.c`. Solution: use the seed `1` for all tests. 
 
 ## Sources Used
 
