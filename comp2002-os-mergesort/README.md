@@ -205,6 +205,8 @@ These issues do not contradict the passing correctness tests above; several conc
 
 **Challenge 3 — Selecting a practical cutoff.** Creating more threads does not always make sorting faster. The code stops spawning threads once it reaches the cutoff and uses sequential recursion thereafter. **What I learned:** parallelism has a cost, so thread creation and scheduling overhead must be balanced against the amount of useful work available in each subarray.
 
+**Challenge 4 – Understanding recursive thread creation.** At first, I found it difficult to understand how parallel_mergesort() could keep creating new threads by calling itself. **What I learned:** I learned that each new thread increases the recursion level, and thread creation stops when the level reaches the cutoff. This helped me understand how recursion and multithreading work together.
+
 ### Member 3 — Testing and Performance (Stuart Vass)
 
 **Challenge 1 — Building useful test coverage.** The automated tests include empty and single-element cases, odd and even lengths, and progressively larger arrays. They run the same groups with multiple cutoff values. **What I learned:** boundary cases and different recursion patterns can reveal faults that one normal-sized random test would miss, and a fixed seed makes failures easier to reproduce.
