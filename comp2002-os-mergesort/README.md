@@ -168,6 +168,23 @@ Table 2.3: Tests for parallel_mergesort()
 | ARRAY OF LARGE SIZES | 10,000 to 100,000, i+=10,000 |
 | ARRAY OF VERY LARGE SIZES | 100,000 to 1,000,000, i+=100,000 |
 
+Table 2.4: Thread tests for parallel_mergesort() for `n = 100,000,000`.
+| Thread Levels | Average Time | % compared to no threading |
+| --- | --- | --- |
+| 0 |  |  |
+| 1 |  |  |
+| 2 |  |  |
+| 3 |  |  |
+| 4 |  |  |
+| 5 |  |  |
+| 6 |  |  |
+| 7 |  |  |
+| 8 |  |  |
+| 9 |  |  |
+| 10 |  |  |
+
+Note: Each thread level was ran 3 times and averaged. The exact time is unimportant, what's useful is what thread level is most efficient for sorting large arrays. 
+
 
 The supplied `unit-tests.c` contains a correctness test matrix using seed `1` and cutoff values 0 through 10. For each cutoff value it exercises:
 
