@@ -135,30 +135,6 @@ void * parallel_mergesort(void *arg){
 struct argument *buildArgs(int left, int right, int level){
     struct argument *args = malloc(sizeof(struct argument));
 
-    bool passed = true;
-
-    if (left < 0) {
-        fprintf(stderr, "buildArgs() Error: left position cannot be negative.\n");
-        passed = false;
-    }
-
-    if (right < 0) {
-        fprintf(stderr, "buildArgs() Error: left position cannot be negative.\n");
-        passed = false;
-    }
-
-    if (level < 0) {
-        fprintf(stderr, "buildArgs() Error: level cannot be negative.\n");
-        passed = false;
-    }
-
-    if (left > right) {
-        fprintf(stderr, "buildArgs() Error: left position is greater than right position.\n");
-        passed = false;
-    }
-
-    if (!passed) { return NULL; }
-
     // check if malloc failed
     if (args == NULL) {
         fprintf(stderr, "buildArgs() Error: malloc failed.\n");
