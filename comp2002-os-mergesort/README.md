@@ -142,12 +142,14 @@ The tests can be broken into the following catergories:
 - Tests for parallel_mergesort()
 
 Table 2.1: Tests for buildArg()
+
 | Input | Quantity |
 | Random Values | 10 |
 | Zeroes | 1 |
 | Negative Random Values | 10 |
 
 Table 2.2: Tests for my_mergesort()
+
 | Input | Quantity |
 | Small arrays | 0 to 9, i++ |
 | Medium arrays | 100 to 900, i+=100 |
@@ -155,6 +157,7 @@ Table 2.2: Tests for my_mergesort()
 | Very large arrays | 100,000 to 900,000, i+=100,000 |
 
 Table 2.3: Tests for parallel_mergesort()
+
 | Input | Quantity |
 | ARRAY OF ZERO | 1 |
 | ARRAY OF SMALL SIZES | 1 to 10, i++ |
