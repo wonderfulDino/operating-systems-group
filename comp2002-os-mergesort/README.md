@@ -238,15 +238,21 @@ These issues do not contradict the passing correctness tests above; several conc
 
 ### Member 3 — Testing and Performance (Stuart Vass)
 
-**Challenge 1 — Building useful test coverage.** The automated tests include empty and single-element cases, odd and even lengths, and progressively larger arrays. They run the same groups with multiple cutoff values. **What I learned:** boundary cases and different recursion patterns can reveal faults that one normal-sized random test would miss, and a fixed seed makes failures easier to reproduce.
+# Challenges
 
-**Challenge 2 — Measuring speedup fairly.** The performance code runs each cutoff three times and compares its average runtime with the sequential baseline. Large arrays reduce the influence of very short timing measurements, but also require significant memory and computational resources. **What I learned:** performance needs repeated measurements under comparable conditions, and the relevant metric is the ratio of parallel time to sequential time rather than an isolated runtime.
+**Challenge 1: Test-retest Reliability:** The time it takes to sort 100,000,000 can vary wildly due to background processes. This makes it difficult to compare any two runs together. **Solution:** using a percentage to the base case (no threading) as opposed to using the time in seconds. This percentage stays more consistent when retesting. 
 
-**Challenge 3 — Understanding the limits of a passing test.** The current `check_if_sorted()` function checks only nondecreasing order, while the automated test matrix currently uses one random seed. **What I learned:** a good test strategy must verify the intended property carefully; further tests could compare against a trusted reference sort and vary seeds to check that all original elements are preserved.
+**Challenge 2: Intra-rater Reliability:** With 100,000,000 elements, each sort takes ~20-60 seconds, this is enough time for background processes to start and finish. **Solution:** Each thread level is ran three times, and is averaged for more consistent results. 
+
+**Challenge 3: No Failing Test Cases:** By the time `unit-tests.c` was implemented, `mergesort.c` was complete and all the test and unit tests were passing. It then became unclear whether `mergesort.c` was correct, or if `unit-tests.c` wasn't comphrensive enough. Solution: Add more tests and compare results against Gradescope results (Inter-Rater Reliability). 
+
+**Challenge 4: Random Seeds**: The function header provided allows for the random seed to be set. Initially it was thought to randomise the seed for the test cases, however this would reduce both the test-retest reliability and intra-rater reliability of `unit-tests.c`. Solution: use the seed `1` for all tests. 
 
 ## Sources Used
 
 - **OpenAI ChatGPT (2026).** Used to discuss sequential merge sort, review code safety and test coverage, assist with Git collaboration. The test claims above were checked against the provided source files and bounded executions.
+
+- **Types of Reliability.** https://www.scribbr.com/methodology/types-of-reliability/
 
 ## Tasks Assignment
 
