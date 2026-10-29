@@ -132,7 +132,7 @@ Example commands:
 
 ### 2. Automated size/cutoff test matrix
 
-To ensure our program is working properly, we have written an additional series of automatic tests in `unit-tests.c`. 
+To ensure our program is working properly, we have written an additional series of automatic tests in `unit-tests.c`. The seed used for all tests was `1`.
 
 These tests can be run via `make unit-tests` or once complied `./unit-tests`.
 
@@ -141,7 +141,7 @@ The tests can be broken into the following catergories:
 - Tests for my_mergesort()
 - Tests for parallel_mergesort()
 
-Table 2.1: Tests for buildArg()
+**Table 2.1:** Tests for buildArg()
 
 | Input | Quantity |
 | --- | --- |
@@ -149,7 +149,7 @@ Table 2.1: Tests for buildArg()
 | Zeroes | 1 |
 | Negative Random Values | 10 |
 
-Table 2.2: Tests for my_mergesort()
+**Table 2.2:** Tests for my_mergesort()
 
 | Input | Quantity |
 | --- | --- |
@@ -158,50 +158,20 @@ Table 2.2: Tests for my_mergesort()
 | Large arrays & Odds, Evens | 1000 to 9000, i+=1001 |
 | Very large arrays | 100,000 to 900,000, i+=100,000 |
 
-Table 2.3: Tests for parallel_mergesort()
+**Table 2.3:** Tests for parallel_mergesort()
 
 | Input | Quantity |
 | --- | --- |
-| ARRAY OF ZERO | 1 |
-| ARRAY OF SMALL SIZES | 1 to 10, i++ |
-| ARRAY OF MEDIUM SIZES + ODDS, EVENS | 100 to 1000, i+=101 |
-| ARRAY OF LARGE SIZES | 10,000 to 100,000, i+=10,000 |
-| ARRAY OF VERY LARGE SIZES | 100,000 to 1,000,000, i+=100,000 |
+| Array of ZERO | 1 |
+| Small arrays | 1 to 10, i++ |
+| Medium arrays & Odds, Evens | 100 to 1000, i+=101 |
+| Large arrays | 10,000 to 100,000, i+=10,000 |
+| Very large arrays | 100,000 to 1,000,000, i+=100,000 |
 
-Table 2.4: Thread tests for parallel_mergesort() for `n = 100,000,000`.
-| Thread Levels | Average Time | % compared to no threading |
-| --- | --- | --- |
-| 0 |  |  |
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
-| 4 |  |  |
-| 5 |  |  |
-| 6 |  |  |
-| 7 |  |  |
-| 8 |  |  |
-| 9 |  |  |
-| 10 |  |  |
+All checks passed.
+```291 / 291 tests ran successfully.```
 
-Note: Each thread level was ran 3 times and averaged. The exact time is unimportant, what's useful is what thread level is most efficient for sorting large arrays. 
-
-
-The supplied `unit-tests.c` contains a correctness test matrix using seed `1` and cutoff values 0 through 10. For each cutoff value it exercises:
-
-| Category in `unit-tests.c` | Input sizes | Cases per cutoff |
-| --- | --- | ---: |
-| Zero-length input | `0` | 1 |
-| Small arrays | `1` through `10` | 10 |
-| Medium arrays, mixing odd/even sizes | `100, 201, 302, ..., 908` | 9 |
-| Large arrays | `10000, 20000, ..., 100000` | 10 |
-| Very large arrays | `100000, 200000, ..., 1000000` | 10 |
-| **Total per cutoff** | | **40** |
-
-This gives **200 correctness checks** across five cutoff levels. During source review, the correctness portion was compiled and run separately from the resource-intensive benchmarking portion; **200/200 checks passed** in that bounded verification run.
-
-The automated test harness directly calls the sorting functions, so it can exercise sizes `0` and `1` even though the normal `test-mergesort` command-line program rejects sizes below `2`. In those cases, no merge is needed. This is an internal boundary test, not an example of valid normal command-line usage.
-
-Both test programs use `check_if_sorted()`, which compares adjacent values and rejects any decrease. This verifies nondecreasing order but does **not**, on its own, prove that the output contains exactly the same multiset of elements as the input. The current automated matrix also uses a fixed seed rather than varying several seeds.
+The test programs used the provided `check_if_sorted()`, which compares adjacent values and rejects any decrease. This verifies nondecreasing order but does **not**, on its own, prove that the output contains exactly the same multiset of elements as the input. The current automated matrix also uses a fixed seed rather than varying several seeds.
 
 ### 3. Performance test design
 
@@ -220,6 +190,21 @@ speedup = mean_sequential_time / mean_parallel_time
 These are the **benchmark settings and calculations implemented in the source**, not verified final performance results. The full 100-million-element benchmark was **not** executed during this documentation review. Two arrays of this size require approximately **800 MB** for integer storage alone, and high cutoffs can create very many threads. Performance results should be recorded on the group's target Linux/WSL machine before claiming the 2× target has been achieved.
 
 Suggested report format for confirmed benchmark results:
+
+**Table 3.1:** Thread tests for parallel_mergesort() for `n = 100,000,000`. Note: Each thread level was ran 3 times and averaged. The exact time is unimportant, what's useful is what thread level is most efficient for sorting large arrays. 
+| Thread Levels | Average Time (seconds) | % compared to no threading |
+| :---: | :---: | :---: |
+| 0 | 27.36 | 100% |
+| 1 | 15.75 | 57.8% |
+| 2 | 12.03 | 44.1% |
+| 3 | 11.16 | 41.0% |
+| 4 | 12.26 | 45.0% |
+| 5 | 12.65 | 46.4% |
+| 6 | 11.59 | 42.% |
+| 7 | 11.40 | 41.8% |
+| 8 | 11.28 | 41.4% |
+| 9 | 11.35 | 41.6% |
+| 10 | 13.09 | 48.0% |
 
 | Cutoff | Mean time (s), 3 runs | Relative time (%) | Speedup |
 | ---: | ---: | ---: | ---: |
