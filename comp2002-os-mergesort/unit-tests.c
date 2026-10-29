@@ -242,7 +242,7 @@ int main(void) {
 
 	section_start("TESTING THREADS");
 	double time = 0;
-	double time_inital = 0;
+	double time_initial = 0;
 	double percentage = 0;
 
 	int duplicates = 3;
@@ -251,21 +251,21 @@ int main(void) {
 	int u;
 
 	printf("# Thread cutoff: %d \n", 0);
-	for(u=0; u<duplicates; u++) { time_inital += test(elements, 0, 1); }
-	time_inital /= (double)duplicates;
+	for(u=0; u<duplicates; u++) { time_initial += test(elements, 0, 1); }
+	time_initial /= (double)duplicates;
 
 	go_back_line();
 	go_back_line();
 	go_back_line();
 
-	printf(COLOUR "%d" GREY " elements took "COLOUR"%4.2lf"GREY" seconds."RESET"\n" , elements,  time_inital);
+	printf(COLOUR "%d" GREY " elements took "COLOUR"%4.2lf"GREY" seconds."RESET"\n" , elements,  time_initial);
 
 	for(i = 1; i <= 10; i++) { 
 		printf("# Thread cutoff: %d \n", i);
 		time = 0;
 		for(u=0; u<duplicates; u++) { time += test(elements, i, 1); }
 		time /= (double)duplicates;
-		percentage = 100*time / time_inital;
+		percentage = 100*time / time_initial;
 
 		go_back_line();
 		go_back_line();
