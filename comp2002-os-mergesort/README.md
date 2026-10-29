@@ -136,11 +136,40 @@ To ensure our program is working properly, we have written additional automatic 
 These tests can be run via `make unit-tests` or once complied `./unit-tests`.
 
 The tests can be broken into the following catergories:
-- Tests for `buildArg()`
-- Tests for `my_mergesort()`
+- Tests for `buildArg()` 
+- Tests for `my_mergesort()` 
 - Tests for `parallel_mergesort()`
 
-**Table 2.1:** Tests for `buildArg()`
+Function signatures in `unit-tests.c`:
+```
+section_start(const char *text);
+test_buildArgs(int left, int right, int level);
+test_mergesort(int n);
+test(int _n, int _cutoff, int _seed);
+section_end();
+```
+
+Example program:
+```
+section_start("Unit Tests");
+test_buildArgs(0, 10, 5);
+test_mergesort(100);
+test(100, 3, 1);
+section_end();
+```
+
+Example program output:
+```
+## Unit Tests ##
+Test buildArgs(0, 10, 5) Passed.
+Test my_mergesort(0, 99) Passed.
+Sorting 100 elements took 0.00 seconds.
+3 / 3 tests ran successfully. 
+```
+
+Tables 2.1, 2.2 and 2.3 show the test cases used for each function. 
+
+**Table 2.1:** Tests for `buildArg()`.
 
 | Input | Quantity |
 | --- | --- |
