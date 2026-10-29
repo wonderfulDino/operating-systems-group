@@ -62,7 +62,7 @@ make unit-tests
 
 The main executable is `./test-mergesort`; the automated test executable is `./unit-tests`.
 
-**Build note:** In the supplied Makefile, `make clean` removes the main executable and object/dependency files, but not the `unit-tests` executable. The current `test-mergesort` link recipe also uses `$?` instead of `$^`, which can cause an incremental relink to fail when only one object file is rebuilt (see **Known Bugs**).
+**Build note:** In the supplied Makefile, `make clean` removes the main executable and object/dependency files. The current `test-mergesort` link recipe also uses `$?` instead of `$^`, which can cause an incremental relink to fail when only one object file is rebuilt (see **Known Bugs**).
 
 ## Implementation Steps
 
