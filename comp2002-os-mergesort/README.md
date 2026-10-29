@@ -36,7 +36,7 @@ This project implements merge sort in C using both sequential recursion and POSI
 - `mergesort.c` — Implements `merge()`, sequential `my_mergesort()`, parallel `parallel_mergesort()`, and `buildArgs()`.
 - `mergesort.h` — Declares the sorting functions, thread argument structure, cutoff, and shared arrays `A` and `B`.
 - `test-mergesort.c` — Generates a seeded random input, runs one sorting test, measures elapsed time, and checks whether the output is sorted.
-- `unit-tests.c` — Runs automated tests over multiple input sizes and cutoff levels, followed by a repeated timing comparison.
+- `unit-tests.c` — Runs automated tests over multiple input sizes and cutoff levels, followed by a repeated timing comparison. Runs some unit tests.
 - `README` — Describes the project, build and usage instructions, testing, limitations, and reflections.
 
 Generated executables, `.o` object files, and `.d` dependency files are build outputs rather than source files.
@@ -132,7 +132,38 @@ Example commands:
 
 ### 2. Automated size/cutoff test matrix
 
-The supplied `unit-tests.c` contains a correctness test matrix using seed `1` and cutoff values **0 through 4**. For each cutoff value it exercises:
+To ensure our program is working properly, we have written an additional series of automatic tests in `unit-tests.c`. 
+
+These tests can be run via `make unit-tests` or once complied `./unit-tests`.
+
+The tests can be broken into the following catergories:
+- Tests for buildArg()
+- Tests for my_mergesort()
+- Tests for parallel_mergesort()
+
+Table 2.1: Tests for buildArg()
+| Input | Quantity |
+| Random Values | 10 |
+| Zeroes | 1 |
+| Negative Random Values | 10 |
+
+Table 2.2: Tests for my_mergesort()
+| Input | Quantity |
+| Small arrays | 0 to 9, i++ |
+| Medium arrays | 100 to 900, i+=100 |
+| Large arrays & Odds, Evens | 1000 to 9000, i+=1001 |
+| Very large arrays | 100,000 to 900,000, i+=100,000 |
+
+Table 2.3: Tests for parallel_mergesort()
+| Input | Quantity |
+| ARRAY OF ZERO | 1 |
+| ARRAY OF SMALL SIZES | 1 to 10, i++ |
+| ARRAY OF MEDIUM SIZES + ODDS, EVENS | 100 to 1000, i+=101 |
+| ARRAY OF LARGE SIZES | 10,000 to 100,000, i+=10,000 |
+| ARRAY OF VERY LARGE SIZES | 100,000 to 1,000,000, i+=100,000 |
+
+
+The supplied `unit-tests.c` contains a correctness test matrix using seed `1` and cutoff values 0 through 10. For each cutoff value it exercises:
 
 | Category in `unit-tests.c` | Input sizes | Cases per cutoff |
 | --- | --- | ---: |

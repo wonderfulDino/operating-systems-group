@@ -10,6 +10,7 @@ test-mergesort: test-mergesort.o mergesort.o
 # Build using unit-tests.c
 unit-tests: unit-tests.o mergesort.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	./unit-tests
 
 .PHONY: clean
 clean:
