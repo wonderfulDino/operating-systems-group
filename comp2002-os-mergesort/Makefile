@@ -14,4 +14,4 @@ unit-tests: unit-tests.o mergesort.o
 
 .PHONY: clean
 clean:
-	/bin/rm -f *.o *.d test-mergesort
+	/bin/rm -f *.o *.d test-mergesort unit-tests
