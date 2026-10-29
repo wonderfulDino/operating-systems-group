@@ -24,7 +24,7 @@
 ## COMP2002 Operating Systems — Parallel Merge Sort
 
 * Authors: Ziming Yu (Member1), Hang Yu (Member2), Stuart Vass (Member 3)
-* Group name: Your Group Name
+* Group name: Group 23
 
 ## Overview
 
