@@ -142,14 +142,15 @@ The tests can be broken into the following catergories:
 - Tests for `my_mergesort()` 
 - Tests for `parallel_mergesort()`
 
-Function signatures in `unit-tests.c`:
-```
-section_start(const char *text);
-test_buildArgs(int left, int right, int level);
-test_mergesort(int n);
-test(int _n, int _cutoff, int _seed);
-section_end();
-```
+**Table 2.1**: Function signatures in `unit-tests.c`:
+| Function | Description |
+| --- | --- |
+| `section_start(const char *text);` | Starts a section of tests. |
+| `test_buildArgs(int left, int right, int level);` |  Function to test `buildArgs()` |
+| `test_mergesort(int n);` | Function to test `my_mergesort()`
+| `test(int _n, int _cutoff, int _seed);` | Function to test `parallel_mergesort()` |
+| `section_success_is(bool condition);` | Allows tests that result in errors or warnings to still be marked as successfully erroring. |
+| `section_end();` | Ends a section of tests and provides summary. |
 
 Example program:
 ```
@@ -169,9 +170,9 @@ Sorting 100 elements took 0.00 seconds.
 3 / 3 tests ran successfully. 
 ```
 
-Tables 2.1, 2.2 and 2.3 show the test cases used for each function. 
+Tables 2.2, 2.3 and 2.4 show the test cases used for each function. 
 
-**Table 2.1:** Tests for `buildArg()`.
+**Table 2.2:** Tests for `buildArg()`.
 
 | Input | Quantity |
 | --- | --- |
@@ -179,7 +180,7 @@ Tables 2.1, 2.2 and 2.3 show the test cases used for each function.
 | Zeroes | 1 |
 | Negative Random Values | 10 |
 
-**Table 2.2:** Tests for `my_mergesort()`
+**Table 2.3:** Tests for `my_mergesort()`
 
 | Input | Quantity |
 | --- | --- |
@@ -188,7 +189,7 @@ Tables 2.1, 2.2 and 2.3 show the test cases used for each function.
 | Large arrays & Odds, Evens | 1000 to 9000, i+=1001 |
 | Very large arrays | 100,000 to 900,000, i+=100,000 |
 
-**Table 2.3:** Tests for `parallel_mergesort()`
+**Table 2.4:** Tests for `parallel_mergesort()`
 
 | Input | Quantity |
 | --- | --- |

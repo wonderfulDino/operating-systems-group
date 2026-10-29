@@ -150,12 +150,14 @@ void section_start(const char *text) {
     tests_n = 0;
 }
 
+// to allow for purposeful crashes to still register as successful.
 void section_success_is(bool condition) {
 	success_is = condition;
 
 	if (!success_is) { printf(COLOUR"# ERRORs sigifies a successful test."RESET"\n"); }
 }
 
+// increments the test success rate if test matches clear conditions.
 void test_success(bool cleared) {
 	tests_n ++;
 	tests_all ++;
@@ -166,6 +168,7 @@ void test_success(bool cleared) {
 	}
 }
 
+// prints out a section summary of the most recent tests
 void section_end(void) {
 	if (successes_n != tests_n) { 
 		printf(RED"%d / %d tests ran successfully."RESET" \n\n", successes_n, tests_n);
@@ -174,6 +177,7 @@ void section_end(void) {
 	}
 }
 
+// unit test parallel_mergesort()
 double test(int _n, int _cutoff, int _seed) {
 	double start_time;
 	double sorting_time;
@@ -250,6 +254,7 @@ void test_buildArgs(int left, int right, int level) {
 
 }
 
+// function to unit test merge_sort()
 void test_mergesort(int n) {
 
 	// setting up variables
@@ -307,8 +312,8 @@ int main(void) {
 	for(i = 100000; i < 1000000; i+=100000) { test_mergesort(i); }
 	section_end();
 
+	// Different thread cutoffs. 
 	int cutoff_i;
-
 	for(cutoff_i=0; cutoff_i<5; cutoff_i++) {
 
 		printf("\n## Cutoff: %d ##\n\n", cutoff_i);
@@ -352,6 +357,7 @@ int main(void) {
 
 	int u;
 
+	// Measuring the performance of different thread cutoffs.
 	printf("# Thread cutoff: %d \n", 0);
 	for(u=0; u<duplicates; u++) { time_initial += test(elements, 0, 1); }
 	time_initial /= (double)duplicates;
@@ -380,7 +386,8 @@ int main(void) {
 	}
 	section_end();
 
-	printf("## CONCLUSION ##\n");
+	// Summary of all the tests. 
+	printf("## SUMMARY ##\n");
 	printf("%d / %d tests ran successfully. \n\n", successes_all, tests_all);
 
 	exit(EXIT_SUCCESS);
