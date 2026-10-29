@@ -211,7 +211,7 @@ These tests were run within an Ubuntu virtual machine on a Window 11 computer wi
 2. **Unchecked allocation of the two arrays (potential failure).** Both `test-mergesort.c` and `unit-tests.c` allocate `A` and `B` without checking whether `malloc()` returns `NULL`. Large input sizes or insufficient memory could therefore lead to an invalid memory access instead of a controlled error message.
 3. **Midpoint arithmetic (edge-case risk).** In the uploaded `mergesort.c`, both recursive implementations still calculate `middle` using `(left + right) / 2`. Adding two large `int` indices may overflow. For valid index ranges, `left + (right - left) / 2` avoids this intermediate addition overflow.
 4. **High-cutoff resource limits.** The parallel version creates two threads at each eligible split and exits if thread creation fails. Large cutoffs can cause substantial thread overhead or resource exhaustion, and there is no fallback to sequential sorting after a `pthread_create()` failure. No specific high-cutoff failure is claimed to have occurred in the verified tests.
-5. **Debug helper and cleanup limitations.** The optional `printA()` and `printB()` routines always print 100 elements; enabling them with smaller arrays would read out of bounds. In addition, `make clean` does not remove the generated `unit-tests` executable.
+5. **Debug helper and cleanup limitations.** The optional `printA()` and `printB()` routines always print 100 elements; enabling them with smaller arrays would read out of bounds.
 
 These issues do not contradict the passing correctness tests above; several concern unusual inputs, build workflow, or resource limitations rather than the standard sorting logic.
 
