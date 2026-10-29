@@ -278,6 +278,8 @@ These issues do not contradict the passing correctness tests above; several conc
 
 **Challenge 4: Random Seeds.** The function header provided allows for the random seed to be set. Initially it was thought to randomise the seed for the test cases, however this would reduce both the test-retest reliability and intra-rater reliability of `unit-tests.c`. Solution: use the seed `1` for all tests. 
 
+**Challenge 5: Security vs Speed**: To fulfill secure programming, a series of error checks in `buildArgs()` were implemented to ensure that `left`, `right` and `level` couldn't be negative, or `left > right`. However, this was then removed for three reasons: it impacts performance as it is checked every thousands of times per sort; the checks were already being performed in `test-mergesort.c`; and the whether it was an error that forced an exit, or a warning that allowed the program to continue, it couldn't be efficiently tested for without changing the signature of `buildArgs()`.
+
 ## Sources Used
 
 - **OpenAI ChatGPT (2026).** Used to discuss sequential merge sort, review code safety and test coverage, assist with Git collaboration. The test claims above were checked against the provided source files and bounded executions.
